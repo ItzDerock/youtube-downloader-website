@@ -57,7 +57,7 @@ export default function QualitySelector() {
     }
   });
 
-  const disabled   = (data.selectedQuality === 'best') || !qualities.length;
+  const disabled   = (data.selectedQuality === 'best') || !qualities.length || data.state !== "input";
 
   useEffect(() => {
     if(!qualities.length) return;
@@ -67,9 +67,8 @@ export default function QualitySelector() {
       selectedQuality: qualities[0].format_id
     }));
 
-    // ignore react-hooks/exhaustive-deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.format]);
+  }, [data.format, data.qualities]);
 
   return (
     <div className="md:flex md:items-center mb-6">

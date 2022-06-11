@@ -22,6 +22,9 @@ export default function URLInput() {
           type="url"
           placeholder="youtube.com/watch?v=dQw4w9WgXcQ"
 
+          debounceTimeout={500}
+          disabled={url.state === "downloading"}
+
           onChange={(e) => {
             setURL({ ...url, url: e.target.value });
           }}

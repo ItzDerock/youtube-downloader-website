@@ -15,6 +15,8 @@ export default function BestSelect() {
               selectedQuality: e.target.checked ? 'best' : (document.getElementById('inline-quality') as HTMLSelectElement).value
             });
           }}
+
+          disabled ={data.state === "downloading"}
         />
         <span className="text-sm">
           Best quality

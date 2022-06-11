@@ -1,7 +1,7 @@
 import { TypeBoxTypeProvider, ajvTypeBoxPlugin } from '@fastify/type-provider-typebox';
 import { Type } from '@sinclair/typebox';
 import fastify from 'fastify';
-import { createReadStream } from 'fs';
+import { createReadStream, existsSync } from 'fs';
 import path from 'path';
 import downloader from './downloader';
 import { clientError, makeTempFolder } from './utils';
@@ -107,12 +107,25 @@ app.route({
         if(download.status !== 'FINISHED')
             return clientError(res, "Download not finished");
 
-        res.header("Content-Disposition", `attachment; filename="${path.basename(download.output)}"`);
+        const filepath = download.getOutput();
+
+        if(!filepath)
+            return clientError(res, "Download not finished or failed");
+
+        res.header("Content-Disposition", `attachment; filename="${path.basename(filepath)}"`);
         res.header("Content-Type", "video/" + download.format);
 
-        res.send(createReadStream(download.output));
+        res.send(createReadStream(filepath));
     }
-})
+});
+
+if(existsSync(path.resolve('../../frontend/build'))) {
+    // serve static files from frontend
+    app.register(require('@fastify/static'), {
+        root: path.resolve('../../frontend/build'),
+        prefix: '/'
+    });
+}
 
 app.listen({
     port: parseInt(process.env.PORT ?? "8080")

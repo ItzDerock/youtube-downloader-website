@@ -16,8 +16,8 @@ export function makeId(length: number) {
 
 export function makeTempFolder(): { path: string, id: string } {
     const tempFolder = os.tmpdir();
-    const id = makeId(10);
-    const folder = path.resolve(tempFolder, id);
+    const id         = makeId(10);
+    const folder     = path.resolve(tempFolder, `ytdpl-${id}`);
 
     if(fs.existsSync(folder))
         return makeTempFolder();

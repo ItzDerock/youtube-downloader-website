@@ -1,4 +1,4 @@
-import { rmdirSync } from "fs";
+import { existsSync, readdirSync, rmdirSync } from "fs";
 import path from "path";
 import { EventEmitter } from "stream";
 import { makeTempFolder } from "./utils";
@@ -35,9 +35,11 @@ export class Download {
             url,
             '-f', quality,
             '-S', 'res,ext:mp4:m4a',
-            '--recode', format,
-            '-o', this.output,
-        ]);
+            '--remux-video', format,
+            // '-o', this.output,
+        ], {
+            cwd: tempFolder.path,
+        });
 
         this.progress = 0;
 
@@ -47,20 +49,46 @@ export class Download {
             currentSpeed: string,
             eta: string
         }) => {
-            console.log(progress);
             this.progress = parseInt(progress.percent);
         }).on('close', () => {
             this.finished = true;
             this.status = 'FINISHED';
         }).on('error', (error: string) => {
+            console.log(String(error));
             this.error = error;
             this.status = 'ERROR';
             this.finished = true; 
+        }).on('ytDlpEvent', (eventType: string, eventData: string) => {
+            if(eventType === "download") {
+                const data = eventData.split(':').map(e => e.trim());
+                if(data[0] !== "Destination") return;
+                if(!data[1].includes(format)) return;
+
+                this.output = path.resolve(tempFolder.path, data[1]);
+            } else if(eventType === "Merger") {
+                if(!eventData.includes("Merging formats into")) return;
+
+                const data = eventData.match(/"([^"]+)"/);
+                if(!data) return;
+
+                this.output = path.resolve(tempFolder.path, data[1] ?? data[0]);
+            }
         });
     }
 
     cleanup() {
         rmdirSync(path.join(this.output, '..'), { recursive: true });
+    }
+
+    getOutput() {
+        if(existsSync(this.output)) return this.output;
+
+        const files = readdirSync(path.join(this.output, '..'))
+            
+        if(files.length === 0) return null;
+        if(files.length === 1) return files[0];
+
+        return files.find(f => f.includes(this.format));
     }
 }
 

@@ -22,6 +22,7 @@ export default function FormatSelector() {
           onChange={(e) => {
             setData({ ...data, format: e.target.value as DataContextType['format'] });
           }}
+          disabled={data.state === "downloading"}
         >
           <option value="mp4">mp4</option>
           <option value="mp3">mp3</option>
