@@ -128,5 +128,8 @@ if(existsSync(path.resolve('../../frontend/build'))) {
 }
 
 app.listen({
-    port: parseInt(process.env.PORT ?? "8080")
+    port: parseInt(process.env.PORT ?? "8080"),
+    host: process.env.HOST ?? "0.0.0.0"
+}).then(d => {
+    console.log(`Listening on ${d}`);
 });
