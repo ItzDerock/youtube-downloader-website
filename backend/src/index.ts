@@ -1,7 +1,7 @@
 import { TypeBoxTypeProvider, ajvTypeBoxPlugin } from '@fastify/type-provider-typebox';
 import { Type } from '@sinclair/typebox';
 import fastify from 'fastify';
-import { createReadStream, existsSync } from 'fs';
+import { createReadStream, existsSync, readFileSync } from 'fs';
 import path from 'path';
 import downloader from './downloader';
 import { clientError, makeTempFolder } from './utils';
@@ -119,11 +119,22 @@ app.route({
     }
 });
 
-if(existsSync(path.resolve('../../frontend/build'))) {
+const frontendPath = process.env.FRONTEND_PATH ?? path.join(__dirname, "../../frontend/build");
+
+console.log(`Checking for built frontend files in ${frontendPath}`);
+if(existsSync(frontendPath)) {
+    console.log("Serving frontend from build folder");
+
     // serve static files from frontend
     app.register(require('@fastify/static'), {
-        root: path.resolve('../../frontend/build'),
-        prefix: '/'
+        root: frontendPath,
+        prefix: '/',
+    });
+
+    const index = readFileSync(path.resolve(frontendPath, 'index.html'));
+
+    app.setNotFoundHandler((req, res) => {
+        res.send(index);
     });
 }
 
