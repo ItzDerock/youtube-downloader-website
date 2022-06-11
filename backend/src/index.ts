@@ -1,7 +1,7 @@
 import { TypeBoxTypeProvider, ajvTypeBoxPlugin } from '@fastify/type-provider-typebox';
 import { Type } from '@sinclair/typebox';
 import fastify from 'fastify';
-import { createReadStream, existsSync, readFileSync } from 'fs';
+import { createReadStream, existsSync, readFileSync, statSync } from 'fs';
 import path from 'path';
 import downloader from './downloader';
 import { clientError, makeTempFolder } from './utils';
@@ -112,8 +112,11 @@ app.route({
         if(!filepath)
             return clientError(res, "Download not finished or failed");
 
+        const fileDetails = statSync(filepath);
+
         res.header("Content-Disposition", `attachment; filename="${path.basename(filepath)}"`);
         res.header("Content-Type", "video/" + download.format);
+        res.header("Content-Length", fileDetails.size);
 
         res.send(createReadStream(filepath));
     }
