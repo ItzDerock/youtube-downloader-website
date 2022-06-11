@@ -1,19 +1,26 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import './App.css';
 import Downloader from './components/Downloader';
 import { DataProvider } from './contexts/Data';
 
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        
-        <DataProvider>
-          <Downloader />
-        </DataProvider>
+    <Fragment>
+      <ToastContainer />
 
-      </header>
-    </div>
+      <div className="App">
+        <div className="App-header">
+          
+          <DataProvider>
+            <Downloader />
+          </DataProvider>
+
+        </div>
+      </div>
+    </Fragment>
   );
 }
 

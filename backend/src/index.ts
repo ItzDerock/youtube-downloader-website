@@ -1,6 +1,9 @@
 import { TypeBoxTypeProvider, ajvTypeBoxPlugin } from '@fastify/type-provider-typebox';
 import { Type } from '@sinclair/typebox';
 import fastify from 'fastify';
+import { createReadStream } from 'fs';
+import path from 'path';
+import downloader from './downloader';
 import { clientError, makeTempFolder } from './utils';
 import ytdlp from './ytdlp';
 
@@ -11,6 +14,10 @@ export const app = fastify({
         plugins: [ajvTypeBoxPlugin]
     }
 }).withTypeProvider<TypeBoxTypeProvider>();
+
+app.register(require('@fastify/cors'), {
+    origin: '*'
+});
 
 app.route({
     method: "POST",
@@ -41,6 +48,7 @@ app.route({
         body: Type.Object({
             url: Type.String(),
             format: Type.String(),
+            quality: Type.String()
         })
     },
 
@@ -48,6 +56,61 @@ app.route({
         if(!youtubeRegex.test(req.body?.url))
             return clientError(res, "Invalid URL");
 
+        const data = downloader.queueDownload(req.body.url, req.body.format, req.body.quality);
+
+        res.send({
+            success: true,
+            id: data.id
+        });
+    }
+});
+
+app.route({
+    method: "GET",
+    url: "/download/status",
+
+    schema: {
+        querystring: Type.Object({
+            id: Type.String()
+        })
+    },
+
+    handler: (req, res) => {
+        const download = downloader.getDownload(req.query.id);
+        if(!download)
+            return clientError(res, "Invalid ID");
+
+        res.send({
+            success: true,
+            status: download.status,
+            progress: download.progress,
+            error: download.error
+        });
+    }
+});
+
+app.route({
+    method: "GET",
+    url: "/download/download",
+
+    schema: {
+        querystring: Type.Object({
+            id: Type.String()
+        })
+    },
+
+    handler: (req, res) => {
+        const download = downloader.getDownload(req.query.id);
+        if(!download)
+            return clientError(res, "Invalid ID");
+
+        if(download.status !== 'FINISHED')
+            return clientError(res, "Download not finished");
+
+        res.header("Content-Disposition", `attachment; filename="${path.basename(download.output)}"`);
+        res.header("Content-Type", "video/" + download.format);
+
+        res.send(createReadStream(download.output));
     }
 })
 

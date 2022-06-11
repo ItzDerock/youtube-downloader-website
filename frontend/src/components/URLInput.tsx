@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { defaults, useData, useDataUpdate } from "../contexts/Data";
+import { useData, useDataUpdate } from "../contexts/Data";
 import { DebounceInput } from "react-debounce-input";
 
 export default function URLInput() {
@@ -21,7 +20,7 @@ export default function URLInput() {
           className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
           id="inline-full-name"
           type="url"
-          placeholder={defaults.url}
+          placeholder="youtube.com/watch?v=dQw4w9WgXcQ"
 
           onChange={(e) => {
             setURL({ ...url, url: e.target.value });
