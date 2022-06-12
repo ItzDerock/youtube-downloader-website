@@ -15,7 +15,7 @@ export function makeId(length: number) {
 }
 
 export function makeTempFolder(): { path: string, id: string } {
-    const tempFolder = os.tmpdir();
+    const tempFolder = process.env.TEMP_DIR ?? os.tmpdir();
     const id         = makeId(10);
     const folder     = path.resolve(tempFolder, `ytdpl-${id}`);
 
