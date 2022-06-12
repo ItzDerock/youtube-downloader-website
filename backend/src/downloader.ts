@@ -86,9 +86,12 @@ export class Download {
         const files = readdirSync(path.join(this.output, '..'))
             
         if(files.length === 0) return null;
-        if(files.length === 1) return files[0];
+        if(files.length === 1) return path.join(this.output, '..', files[0]);
 
-        return files.find(f => f.includes(this.format));
+        const found = files.find(f => f.includes(this.format));
+        if(!found) return null;
+
+        return path.join(this.output, '..', found);
     }
 }
 
