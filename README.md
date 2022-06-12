@@ -9,6 +9,15 @@
 
 ### ✨ [Demo](https://dl.derock.dev)
 
+## Quickstart via docker
+
+```sh
+docker run -p 8080:8080 derockdev/youtubedownloader
+```
+
+And your done!  
+You can view the site at http://127.0.0.1:8080
+
 ## Install
 
 ```sh

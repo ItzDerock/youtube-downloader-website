@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    
+    "build:docker": "docker build . --tag derockdev/youtubedownloader",
 
     "start": "cd backend && npm start",
     
