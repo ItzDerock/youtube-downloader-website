@@ -4,10 +4,11 @@ import path from 'path';
 import fs from 'fs';
 import config from "./config";
 
-export function clientError(response: FastifyReply, error: string) {
+export function clientError(response: FastifyReply, error: string, extras?: { [key: string]: any }) {
     response.status(400).send({
         success: false,
-        error
+        error,
+        ...(extras ?? {})
     });
 }
 
