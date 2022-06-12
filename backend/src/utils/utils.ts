@@ -2,6 +2,7 @@ import { FastifyReply } from "fastify";
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
+import config from "./config";
 
 export function clientError(response: FastifyReply, error: string) {
     response.status(400).send({
@@ -15,7 +16,7 @@ export function makeId(length: number) {
 }
 
 export function makeTempFolder(): { path: string, id: string } {
-    const tempFolder = process.env.TEMP_DIR ?? os.tmpdir();
+    const tempFolder = config.tempDir;
     const id         = makeId(10);
     const folder     = path.resolve(tempFolder, `ytdpl-${id}`);
 

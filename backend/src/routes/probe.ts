@@ -1,5 +1,6 @@
 import { Type } from "@sinclair/typebox";
 import { app } from "..";
+import { Info } from "../types/ytdlp";
 import { clientError, youtubeRegex } from "../utils/utils";
 import ytdlp from "../ytdlp";
 
@@ -11,15 +12,17 @@ app.route({
         body: Type.String()
     },
     
-    handler: (req, res) => {
+    handler: async (req, res) => {
         if(!youtubeRegex.test(req.body))
             return clientError(res, "Invalid URL");
 
-        ytdlp.getVideoInfo(req.body).then((info: any) => {
-            res.send({
-                success: true,
-                info
-            });
+        const info = (await ytdlp.getVideoInfo(req.body)) as Info;
+        
+        res.send({
+            success: true,
+            info: {
+                formats: info.formats
+            }
         });
     }
 });

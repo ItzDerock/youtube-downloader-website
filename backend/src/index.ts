@@ -4,9 +4,7 @@ import { readdirSync, statSync } from 'fs';
 import path from 'path';
 import * as color from 'colorette'
 import logger from './utils/logger';
-
-import { config } from 'dotenv';
-config();
+import config from './utils/config';
 
 export const app = fastify({
     ajv: {
@@ -41,8 +39,8 @@ function loaddir(dir: string) {
 loaddir(routes);
 
 app.listen({
-    port: parseInt(process.env.PORT ?? "8080"),
-    host: process.env.HOST ?? "0.0.0.0"
+    port: config.port,
+    host: config.host
 }).then(d => {
     logger.info(`Server listening on ${color.blue(d)}`);
 });

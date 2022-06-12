@@ -1,16 +1,15 @@
 import bunyan from 'bunyan';
 import bunyanFormat from 'bunyan-format';
+import config from './config';
 
 // if in production, do not log debug messages
-const isProd = process.env.NODE_ENV === 'production';
 const streams: bunyan.Stream[] = [
-    { level: isProd ? 'info' : 'debug', stream: bunyanFormat({ }) }
+    { level: config.logLevel, stream: bunyanFormat({ }) }
 ];
 
 // option to disable logging to file
 // useful if your app is running in a container with no mounted logs folder
-const saveLogs = process.env.NO_LOGS === undefined;
-if(saveLogs) {
+if(config.saveLogs) {
     // ensure logs folder exists
     const fs = require('fs');
     if(!fs.existsSync('./logs')) 
