@@ -28,3 +28,5 @@ export function makeTempFolder(): { path: string, id: string } {
         id
     };
 }
+
+export const youtubeRegex = new RegExp(/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/);
