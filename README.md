@@ -5,7 +5,9 @@
   </a>
 </p>
 
-> A simple webapp that uses yt-dlp to download youtube videos.
+> A simple webapp that uses yt-dlp to download youtube videos.  
+> This application is designed for personal backups or anything that falls under fair use!  
+> Do not use this to download anything that might infinge on copyrights.
 
 ### ✨ [Demo](https://dl.derock.dev)
 

@@ -34,6 +34,10 @@ export default function Downloader() {
 
       <br />
       <a href="https://github.com/ItzDerock/youtube-downloader-website" className="text-blue-500">GitHub</a>
+      <p className="text-gray-300">
+        This service is designed for archival purposes and personal use.<br/>
+        Do not download anything that may infringe with copyrights.
+      </p>
     </Fragment>
   );
 }
