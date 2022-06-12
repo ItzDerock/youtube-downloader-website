@@ -1,7 +1,7 @@
 export interface Info {
     id: string;
     title: string;
-    formats: (FormatsEntity)[] | null;
+    formats: (FormatsEntity)[];
     thumbnails?: (ThumbnailsEntity)[] | null;
     thumbnail: string;
     description: string;
@@ -96,7 +96,7 @@ export interface FormatsEntity {
     video_ext: string;
     format: string;
     resolution: string;
-    http_headers: {
+    http_headers?: {
         [key: string]: string
     };
     asr?: number | null;
