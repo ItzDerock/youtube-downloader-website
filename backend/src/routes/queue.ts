@@ -1,7 +1,7 @@
 import { Type } from "@sinclair/typebox";
 import { app } from "..";
 import downloader from "../downloader";
-import { youtubeRegex, clientError } from "../utils";
+import { youtubeRegex, clientError } from "../utils/utils";
 
 app.route({
     method: "POST",

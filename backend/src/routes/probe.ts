@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
 import { app } from "..";
-import { clientError, youtubeRegex } from "../utils";
+import { clientError, youtubeRegex } from "../utils/utils";
 import ytdlp from "../ytdlp";
 
 app.route({

@@ -2,6 +2,8 @@ import { TypeBoxTypeProvider, ajvTypeBoxPlugin } from '@fastify/type-provider-ty
 import fastify from 'fastify';
 import { readdirSync, statSync } from 'fs';
 import path from 'path';
+import * as color from 'colorette'
+import logger from './utils/logger';
 
 import { config } from 'dotenv';
 config();
@@ -30,7 +32,7 @@ function loaddir(dir: string) {
         }
         
         if(file.endsWith(".ts") || file.endsWith(".js")) {
-            console.log(`Loading route ${path.relative(routes, fullpath)}`);
+            logger.debug(`Loading route ${color.blue(path.relative(routes, fullpath))}`);
             require(fullpath);
         }
     }
@@ -42,5 +44,5 @@ app.listen({
     port: parseInt(process.env.PORT ?? "8080"),
     host: process.env.HOST ?? "0.0.0.0"
 }).then(d => {
-    console.log(`Listening on ${d}`);
+    logger.info(`Server listening on ${color.blue(d)}`);
 });

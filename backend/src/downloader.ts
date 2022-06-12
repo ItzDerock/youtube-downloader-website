@@ -1,7 +1,8 @@
 import { existsSync, readdirSync, rmdirSync } from "fs";
 import path from "path";
 import { EventEmitter } from "stream";
-import { makeTempFolder } from "./utils";
+import logger from "./utils/logger";
+import { makeTempFolder } from "./utils/utils";
 import ytdlp from "./ytdlp";
 
 export class Download {
@@ -54,7 +55,8 @@ export class Download {
             this.finished = true;
             this.status = 'FINISHED';
         }).on('error', (error: string) => {
-            console.log(String(error));
+            logger.downloader.error(`Failed to download ${this.url} (${this.id}): `, error);
+            
             this.error = error;
             this.status = 'ERROR';
             this.finished = true; 

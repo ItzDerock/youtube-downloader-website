@@ -3,7 +3,7 @@ import { statSync, createReadStream } from "fs";
 import path from "path";
 import { app } from "..";
 import downloader from "../downloader";
-import { clientError } from "../utils";
+import { clientError } from "../utils/utils";
 
 app.route({
     method: "GET",
