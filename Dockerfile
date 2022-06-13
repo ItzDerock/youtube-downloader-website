@@ -32,6 +32,7 @@ WORKDIR /app
 RUN cd /app/backend && npm install
 
 EXPOSE 8080
+ENV NODE_ENV=production
 
 # done
 ENTRYPOINT [ "node" ]
