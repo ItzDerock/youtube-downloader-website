@@ -127,11 +127,11 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         validateStatus: () => true
       });
 
-      if(!status.data.success) return;
-
-      // set the progress
-      if(status.data.status === "IN_PROGRESS")
-        return setData(d => ({ ...d, progress: status.data.progress }));
+      if(status.data.success) {
+        // set the progress
+        if(status.data.status === "IN_PROGRESS")
+          return setData(d => ({ ...d, progress: status.data.progress }));
+      }
 
       // if finished or failed, clear the interval
       clearInterval(interval);
@@ -154,6 +154,13 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       // if failed, notify user
       if(status.data.status === "FAILED") {
         toast("Download failed: " + status.data.error, {
+          type: "error"
+        });
+      }
+
+      // internal server error
+      if(status.status === 500) {
+        toast(status.data.error ?? status.data.message ?? "Internal Server Error", {
           type: "error"
         });
       }
