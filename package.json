@@ -5,19 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    
     "build:docker": "docker buildx build --platform=linux/amd64,linux/arm64 --tag derockdev/youtubedownloader --push .",
-
     "start": "cd backend && npm start",
-    
-    "prepare": "concurrently \"npm run prepare:frontend\" \"npm run prepare:backend\"",
-    "prepare:backend": "cd backend && npm install",
-    "prepare:frontend": "cd frontend && npm install",
-
-    "build": "concurrently \"npm run build:frontend\" \"npm run build:backend\"",
     "build:frontend": "cd frontend && npm run build",
-    "build:backend": "cd backend && npm run build",
-
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev"
@@ -27,5 +17,9 @@
   "license": "ISC",
   "dependencies": {
     "concurrently": "^7.2.1"
-  }
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
 }
