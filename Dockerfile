@@ -1,39 +1,38 @@
 ## Builder
-FROM node:16-alpine as builder
+FROM node:16-slim as frontend 
+
+# install bun
+# RUN apt-get update && apt-get install -y curl unzip
+# RUN curl -fsSL https://bun.sh/install | bash 
 
 # Copy files
 RUN mkdir /build
 WORKDIR /build
-COPY . /build 
+COPY . /build
 
 # Install build dependencies
-RUN npm install
+# RUN install
 
-# Build the application
-RUN npm run build
+# Build frontend 
+RUN cd frontend && npm install && npm run build 
 
 ## Runner
-FROM node:16-alpine as runner
+FROM oven/bun:latest as runner
 
-# Install ffmpeg and yt-dlp
-RUN apk add --no-cache ffmpeg yt-dlp
+# Install ffmpeg, python3
+RUN apt-get update && apt-get install -y ffmpeg python3
 
 # Copy over files
-RUN mkdir -p /app/frontend/build /app/backend/build
-COPY --from=builder /build/frontend/build /app/frontend/build
-COPY --from=builder /build/backend/build /app/backend/build
+RUN mkdir -p /app/frontend/build
+COPY --from=frontend /build/frontend/build /app/frontend/build
+COPY /backend /app/backend
 
-# Copy package jsons
-COPY package*.json /app
-COPY backend/package*.json /app/backend
+# Install backend dependencies
+RUN cd /app/backend && bun install
 
-# Install dependencies
-WORKDIR /app
-RUN cd /app/backend && npm install
-
+# Expose port
 EXPOSE 8080
-ENV NODE_ENV=production
 
-# done
-ENTRYPOINT [ "node" ]
-CMD [ "/app/backend/build/index.js" ]
+# Run backend
+WORKDIR /app
+CMD ["bun", "run", "/app/backend/src/index.ts"]
